@@ -1,5 +1,6 @@
 class UserController < ApplicationController
   def new
+	@user = User.new
 	@title = "Sign up"
   end
 
@@ -7,4 +8,15 @@ class UserController < ApplicationController
 	@user = User.find(params[:id])
 	@title = @user.name
   end
+
+  def create
+	@user = User.new(params[:user])
+	if @user.save
+
+	else
+		@title = "sign up"
+		render 'new'
+	end
+  end
+
 end
