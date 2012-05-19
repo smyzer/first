@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   attr_accessible 	:email, :name, :password, :password_confirmation
   attr_accessor		:password
 
+  has_many :microposts, :dependent => :destroy
+
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   validates :name,  :presence => true,
@@ -17,6 +19,11 @@ class User < ActiveRecord::Base
 			:length		=> { :within => 6..40 }
 
   before_save	:encrypt_password
+
+  def feed
+    # This is preliminary. See Глава 12 for the full implementation.
+    Micropost.where("user_id = ?", id)
+  end
 
   def has_password?( submitted_password )
 	encrypted_password == encrypt( submitted_password )
